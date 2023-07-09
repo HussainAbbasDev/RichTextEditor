@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<!-- It was Hard to Write and it should be Hard to read (No Comments for you )  -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Rich Text Editor</title>
+
+<link rel="stylesheet" href="./Rich Text Editor_files/style.css">
+<script type="text/javascript">
+var oDoc, sDefTxt;
+
+docuemnt.getElementById('others').style.display = "none";
+
+function initDoc() {
+  oDoc = document.getElementById("textBox");
+  sDefTxt = oDoc.innerHTML;
+  if (document.compForm.switchMode.checked) { setDocMode(true); }
+}
+
+function formatDoc(sCmd, sValue) {
+  if (validateMode()) { document.execCommand(sCmd, false, sValue); oDoc.focus(); }
+}
+
+function validateMode() {
+  if (!document.compForm.switchMode.checked) { return true ; }
+  alert("Uncheck \"Show HTML\".");
+  oDoc.focus();
+  return false;
+}
+
+function setDocMode(bToSource) {
+  var oContent;
+  if (bToSource) {
+    oContent = document.createTextNode(oDoc.innerHTML);
+    oDoc.innerHTML = "";
+    var oPre = document.createElement("pre");
+    oDoc.contentEditable = false;
+    oPre.id = "sourceText";
+    oPre.contentEditable = true;
+    oPre.appendChild(oContent);
+    oDoc.appendChild(oPre);
+    document.execCommand("defaultParagraphSeparator", false, "div");
+  } else {
+    if (document.all) {
+      oDoc.innerHTML = oDoc.innerText;
+    } else {
+      oContent = document.createRange();
+      oContent.selectNodeContents(oDoc.firstChild);
+      oDoc.innerHTML = oContent.toString();
+    }
+    oDoc.contentEditable = true;
+  }
+  oDoc.focus();
+}
+
+function printDoc() {
+  if (!validateMode()) { return; }
+  var oPrntWin = window.open("","_blank","width=450,height=470,left=400,top=100,menubar=yes,toolbar=no,location=no,scrollbars=yes");
+  oPrntWin.document.open();
+  oPrntWin.document.write("<!doctype html><html><head><title>Print<\/title><\/head><body onload=\"print();\">" + oDoc.innerHTML + "<\/body><\/html>");
+  oPrntWin.document.close();
+}
+
+function others(){
+    docuemnt.getElementById('textBox').value;
+    
+    
+}
+</script>
+</head>
+<body onload="initDoc();">
+<form name="compForm" method="post" action="https://webypad.netlify.app/freeimages.html" onsubmit="if(validateMode()){this.myDoc.value=oDoc.innerHTML;return true;}return false;">
+<input type="hidden" name="myDoc">
+<div id="toolBar1">
+<select onchange="formatDoc(&#39;formatblock&#39;,this[this.selectedIndex].value);this.selectedIndex=0;">
+<option selected="">Formating</option>
+<option value="h1">Title 1 &lt;h1&gt;</option>
+<option value="h2">Title 2 &lt;h2&gt;</option>
+<option value="h3">Title 3 &lt;h3&gt;</option>
+<option value="h4">Title 4 &lt;h4&gt;</option>
+<option value="h5">Title 5 &lt;h5&gt;</option>
+<option value="h6">Subtitle &lt;h6&gt;</option>
+<option value="p">Paragraph &lt;p&gt;</option>
+<option value="pre">Preformatted &lt;pre&gt;</option>
+</select>
+<select onchange="formatDoc(&#39;fontname&#39;,this[this.selectedIndex].value);this.selectedIndex=0;">
+<option class="heading" selected="">Font</option>
+<option>Arial</option>
+<option>Arial Black</option>
+<option>Courier New</option>
+<option>Times New Roman</option>
+</select>
+<select onchange="formatDoc(&#39;fontsize&#39;,this[this.selectedIndex].value);this.selectedIndex=0;">
+<option class="heading" selected="">Size</option>
+<option value="1">Very small</option>
+<option value="2">A bit small</option>
+<option value="3">Normal</option>
+<option value="4">Medium-large</option>
+<option value="5">Big</option>
+<option value="6">Very big</option>
+<option value="7">Maximum</option>
+</select>
+<select onchange="formatDoc(&#39;forecolor&#39;,this[this.selectedIndex].value);this.selectedIndex=0;">
+<option class="heading" selected="">Color</option>
+<option value="red">Red</option>
+<option value="blue">Blue</option>
+<option value="green">Green</option>
+<option value="white">White</option>
+<option value="black">Black</option>
+<option value="others" onclick="others()">Others...</option>
+</select>
+<select onchange="formatDoc(&#39;backcolor&#39;,this[this.selectedIndex].value);this.selectedIndex=0;">
+<option class="heading" selected="">Background</option>
+<option value="red">Red</option>
+<option value="green">Green</option>
+<option value="black">Black</option>
+</select>
+
+
+</div>
+<div id="toolBar2">
+<img class="intLink" title="Clean" onclick="if(validateMode()&amp;&amp;confirm(&#39;Are you sure?&#39;)){oDoc.innerHTML=sDefTxt};" src="./Rich Text Editor_files/clean.gif">
+<img class="intLink" title="Undo" onclick="formatDoc(&#39;undo&#39;);" src="./Rich Text Editor_files/undo.gif">
+<img class="intLink" title="Redo" onclick="formatDoc(&#39;redo&#39;);" src="./Rich Text Editor_files/redo.gif">
+<img class="intLink" title="Remove formatting" onclick="formatDoc(&#39;removeFormat&#39;)" src="./Rich Text Editor_files/removeformating.png">
+<img class="intLink" title="Bold" onclick="formatDoc(&#39;bold&#39;);" src="./Rich Text Editor_files/bold.gif">
+<img class="intLink" title="Italic" onclick="formatDoc(&#39;italic&#39;);" src="./Rich Text Editor_files/italic.gif">
+<img class="intLink" title="Underline" onclick="formatDoc(&#39;underline&#39;);" src="./Rich Text Editor_files/underline.gif">
+<img class="intLink" title="Left align" onclick="formatDoc(&#39;justifyleft&#39;);" src="./Rich Text Editor_files/left.gif">
+<img class="intLink" title="Center align" onclick="formatDoc(&#39;justifycenter&#39;);" src="./Rich Text Editor_files/center.gif">
+<img class="intLink" title="Right align" onclick="formatDoc(&#39;justifyright&#39;);" src="./Rich Text Editor_files/right.gif">
+<img class="intLink" title="Numbered list" onclick="formatDoc(&#39;insertorderedlist&#39;);" src="./Rich Text Editor_files/ol.gif">
+<img class="intLink" title="Dotted list" onclick="formatDoc(&#39;insertunorderedlist&#39;);" src="./Rich Text Editor_files/ul.gif">
+<img class="intLink" title="Quote" onclick="formatDoc(&#39;formatblock&#39;,&#39;blockquote&#39;);" src="./Rich Text Editor_files/qoute.gif">
+<img class="intLink" title="Delete indentation" onclick="formatDoc(&#39;outdent&#39;);" src="./Rich Text Editor_files/move left.gif">
+<img class="intLink" title="Add indentation" onclick="formatDoc(&#39;indent&#39;);" src="./Rich Text Editor_files/rightmove.gif">
+<img class="intLink" title="Hyperlink" onclick="var sLnk=prompt(&#39;Write the URL here&#39;,&#39;http:\/\/&#39;);if(sLnk&amp;&amp;sLnk!=&#39;&#39;&amp;&amp;sLnk!=&#39;http://&#39;){formatDoc(&#39;createlink&#39;,sLnk)}" src="./Rich Text Editor_files/link.gif">
+<img class="intLink" title="Cut" onclick="formatDoc(&#39;cut&#39;);" src="./Rich Text Editor_files/cut.gif">
+<img class="intLink" title="Copy" onclick="formatDoc(&#39;copy&#39;);" src="./Rich Text Editor_files/copy.gif">
+<img class="intLink" title="Paste" onclick="formatDoc(&#39;paste&#39;);" src="./Rich Text Editor_files/paste.gif">
+</div>
+
+    
+
+<div id="textBox" contenteditable="true"><p style="color: black;">My Name is Hussain Abbas</p></div>
+<p id="editMode"><input type="checkbox" name="switchMode" id="switchBox" onchange="setDocMode(this.checked);"> <label for="switchBox">Show HTML</label></p>
+
+</form>
+
+
+</body></html>
